@@ -1,0 +1,40 @@
+/*
+ * CssOverride - demonstration: dark appearance for the overview page that the
+ * UI Client displays by default.
+ *
+ * This file is applied through a URL rule in the "options" of the extension in
+ * config.json, so it only affects the overview page. It overrides nothing but
+ * the custom properties that overview/styles.css defines on :root, which is
+ * the least invasive way to restyle a page that uses them - a TwinCAT HMI can
+ * be restyled the same way.
+ *
+ * Remove the rule from config.json, or empty this file, once the extension has
+ * proven itself.
+ */
+
+:root {
+    --bg-start: #161b22;
+    --bg-end: #0d1117;
+    --panel: #1c2330;
+    --text: #e6edf3;
+    --muted: #9aa7b8;
+    --accent: #4fa8e0;
+    --accent-hover: #7cc4f0;
+    --border: #2c3645;
+    --border-hover: #4fa8e0;
+}
+
+/* The thumbnails of the tiles have their own background colour, which is not
+   covered by the custom properties above. */
+.card-thumb {
+    background: #222b38;
+}
+
+/* Marker that makes the injection visible at a glance. */
+header h1::after {
+    content: " [CssOverride]";
+    font-size: 0.7em;
+    font-weight: 400;
+    color: var(--accent);
+    vertical-align: middle;
+}

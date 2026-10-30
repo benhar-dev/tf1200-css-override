@@ -1,0 +1,57 @@
+# Add any directories, files, or patterns you don't want to be tracked by version control #
+
+## Extension generated files ##
+# diagnostics written by the extension at runtime
+cssoverride.log
+
+# backups of the UI Client configuration, made when installing the extension
+config.json.bak-*
+
+### Dependency directories ###
+node_modules/
+jspm_packages/
+
+### Debug logs ###
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+### Temporary files ###
+*.temp
+*.tmp
+*.swp
+*.swo
+
+### Operating System generated files ###
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+### Editor directories and files ###
+.idea
+*.sublime-project
+*.sublime-workspace
+.vscode/
+*.code-workspace
+
+### Optional caches and history ###
+.npm
+.eslintcache
+.node_repl_history
+
+### Output of 'npm pack' ###
+*.tgz
+
+### Yarn Integrity file ###
+.yarn-integrity
+
+### dotenv environment variable files ###
+.env*
+!*.example.env
+
+### Misc ###
+*.log

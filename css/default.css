@@ -1,0 +1,38 @@
+/*
+ * CssOverride - CSS applied to every page displayed by the UI Client.
+ *
+ * Save this file and the UI Client re-applies it immediately; a reload of the
+ * page is not needed. The rules here are injected after all stylesheets of the
+ * page, so a rule of equal specificity wins. Where the page uses !important,
+ * use !important here as well.
+ *
+ * This file is intentionally almost empty: CSS that should only affect certain
+ * pages belongs in a rule in the "options" of the extension in config.json
+ * (see css/overview-dark.css for an example).
+ */
+
+/* Hide the mouse cursor on a touch-only panel:
+html, html * {
+    cursor: none !important;
+}
+*/
+
+/* Suppress text selection on a touch panel:
+html * {
+    user-select: none !important;
+}
+*/
+
+/* Example for a TwinCAT HMI, which exposes its theme as custom properties:
+:root {
+    --tchmi-primary-color: #005b9a;
+    --tchmi-font-family: "Segoe UI", Tahoma, sans-serif;
+}
+*/
+
+/* Enlarge buttons of a TwinCAT HMI for operation by hand:
+.tchmi-button {
+    min-height: 48px !important;
+    font-size: 1.1rem !important;
+}
+*/

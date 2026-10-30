@@ -1,0 +1,27 @@
+{
+    "name": "CssOverride",
+    "version": "1.0.0",
+    "description": "Injects user-defined CSS into the page displayed by the UI Client, with live reload when the CSS files change",
+    "entryPoint": "main.js",
+    "rendererScript": "renderer.js",
+    "menuBar": [
+        {
+            "id": "enabled",
+            "label": "CSS override active",
+            "type": "checkbox",
+            "checked": true,
+            "accelerator": "CmdOrCtrl+Alt+C",
+            "click": "toggle"
+        },
+        {
+            "id": "separator",
+            "type": "separator"
+        },
+        {
+            "id": "reload",
+            "label": "Reload CSS files",
+            "accelerator": "CmdOrCtrl+Alt+R",
+            "click": "reload"
+        }
+    ]
+}

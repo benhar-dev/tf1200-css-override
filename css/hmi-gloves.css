@@ -1,0 +1,438 @@
+/*
+ * CssOverride - glove-friendly operation for the TwinCAT HMI server pages
+ * (login, server initialization and the configuration UI).
+ *
+ * The HMI server sizes every control from one rule in config_modern.css:
+ *
+ *     input, button, textarea, select { height: 22px }
+ *
+ * 22 px is roughly 6 mm on a typical 15" 1024x768 panel - far below what a
+ * gloved fingertip can hit reliably. Recommendations for industrial touch
+ * panels put the minimum at about 15 mm, so the targets below default to
+ * 56 px (~17 mm) and primary buttons to 64 px.
+ *
+ * Tune everything with the variables in the first block. All values are in
+ * px because the HMI pages use a fixed-size layout.
+ */
+
+:root {
+    /* Minimum height of any control the operator has to hit */
+    --glove-target: 56px;
+
+    /* Primary buttons: Login, Set, Submit */
+    --glove-target-lg: 64px;
+
+    /* Checkboxes, which are square */
+    --glove-check: 34px;
+
+    /* Base text size of the page (the HMI default is 12px) */
+    --glove-font-base: 15px;
+
+    /* Text inside controls */
+    --glove-font-control: 17px;
+
+    /* Text on primary buttons */
+    --glove-font-button: 19px;
+
+    /* Gap between neighbouring targets, so a near miss hits nothing
+       rather than the wrong control */
+    --glove-gap: 12px;
+
+    /* Focus ring - deliberately loud, a gloved operator needs to see at a
+       glance which field the keyboard is typing into */
+    --glove-focus: #ffb000;
+
+    /* Width of scrollbars that have to be dragged with a glove */
+    --glove-scrollbar: 26px;
+
+    /* Height of the on-screen keyboard's key grid. Every key is sized as a
+       percentage of this box, so this is what scales the keys: 230px (the
+       HMI default) gives 50px keys, 300px gives about 65px. Read the
+       keyboard section at the bottom before changing it. */
+    --glove-key-grid-height: 300px;
+}
+
+/* ------------------------------------------------------------------ *
+ * Touch behaviour
+ * ------------------------------------------------------------------ */
+
+html {
+    /* Removes the double-tap-to-zoom delay, so a tap reacts immediately */
+    touch-action: manipulation;
+}
+
+/* A glove drags more than a fingertip does. Without this, a slightly smeared
+   tap selects label text instead of pressing the control. */
+body,
+label,
+button,
+a,
+.treeText,
+.configLink,
+.login-cell-label,
+.tchmi-keyboard-template-label,
+input[type=submit],
+input[type=button] {
+    -webkit-user-select: none !important;
+    user-select: none !important;
+}
+
+/* Text fields must stay selectable */
+input[type=text],
+input[type=password],
+input[type=number],
+input[type=email],
+input:not([type]),
+textarea {
+    -webkit-user-select: text !important;
+    user-select: text !important;
+}
+
+/* ------------------------------------------------------------------ *
+ * Typography
+ * ------------------------------------------------------------------ */
+
+body {
+    font-size: var(--glove-font-base) !important;
+}
+
+.login-cell-label,
+.valuedescription,
+label,
+p,
+td,
+.treeText {
+    font-size: var(--glove-font-base) !important;
+    line-height: 1.45 !important;
+}
+
+.login-headline .mediumtext,
+h3 {
+    font-size: 22px !important;
+    line-height: 1.3 !important;
+}
+
+/* The label of a login row is clipped at 120px by default, which truncates
+   longer field names once the text gets bigger. */
+.login-cell-label {
+    max-width: none !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+}
+
+/* ------------------------------------------------------------------ *
+ * Controls
+ * ------------------------------------------------------------------ */
+
+input,
+button,
+textarea,
+select,
+.codemirror-dialog-toggle-btn {
+    /* height is a fixed 22px in config_modern.css and login.css */
+    height: auto !important;
+    min-height: var(--glove-target) !important;
+    font-size: var(--glove-font-control) !important;
+    padding: 10px 12px !important;
+    border-radius: 4px !important;
+}
+
+textarea {
+    min-height: calc(var(--glove-target) * 2) !important;
+    line-height: 1.45 !important;
+}
+
+/* The native dropdown arrow is drawn at 14px and pinned 4px from the edge,
+   which is hard to see and hit once the control is tall. */
+.selectParent select {
+    background-size: 26px 26px !important;
+    background-position: right 12px center !important;
+    padding-right: 48px !important;
+}
+
+/* ------------------------------------------------------------------ *
+ * Buttons
+ * ------------------------------------------------------------------ */
+
+input[type=submit],
+input[type=button],
+button,
+.login-page-button,
+.login-button,
+.reload-page-btn,
+.confirm-hint-or-error-btn,
+.remove-button,
+.rename-button,
+.config-tooltip-button,
+.autologin-logout-btn,
+#logout-button {
+    min-height: var(--glove-target-lg) !important;
+    font-size: var(--glove-font-button) !important;
+    font-weight: 600 !important;
+    padding: 12px 20px !important;
+    border-radius: 6px !important;
+
+    /* login.css clips the submit button's content box at 22px */
+    overflow: visible !important;
+}
+
+/* A gloved operator gets no tactile feedback from the panel, so the press has
+   to be unmistakable on screen. */
+input[type=submit]:active,
+input[type=button]:active,
+button:active,
+.login-page-button:active,
+.login-button:active,
+.reload-page-btn:active,
+.confirm-hint-or-error-btn:active,
+.remove-button:active,
+.rename-button:active,
+.treeText:active,
+.configLink:active,
+a:active {
+    filter: brightness(1.4) !important;
+    transform: scale(0.97) !important;
+    transition: none !important;
+}
+
+/* ------------------------------------------------------------------ *
+ * Focus
+ * ------------------------------------------------------------------ */
+
+input:focus,
+button:focus,
+textarea:focus,
+select:focus,
+.codemirror-dialog-toggle-btn:focus {
+    outline: 4px solid var(--glove-focus) !important;
+    outline-offset: 3px !important;
+}
+
+/* ------------------------------------------------------------------ *
+ * Checkboxes
+ * ------------------------------------------------------------------ */
+
+input[type=checkbox] {
+    width: var(--glove-check) !important;
+    height: var(--glove-check) !important;
+    min-height: var(--glove-check) !important;
+    padding: 0 !important;
+    margin-left: var(--glove-gap) !important;
+    accent-color: #4794da !important;
+    vertical-align: middle !important;
+}
+
+/* ------------------------------------------------------------------ *
+ * Login, server initialization and other dialogs
+ *
+ * At >=769px the HMI puts the label and the field side by side, caps the
+ * field at 230px and gives the row a fixed 45px height with overflow:hidden -
+ * taller fields would simply be cut off. Below 769px it already stacks them,
+ * which is the better layout for gloves, so that arrangement is applied at
+ * every width and the row is allowed to grow.
+ * ------------------------------------------------------------------ */
+
+.login-container {
+    max-width: 560px !important;
+    width: calc(100% - 40px) !important;
+    padding: 28px !important;
+}
+
+.login-body-row {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    margin-bottom: var(--glove-gap) !important;
+}
+
+.login-cell {
+    float: none !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin-bottom: 6px !important;
+    height: auto !important;
+}
+
+.login-cell.login-value,
+.login-cell.login-valuename {
+    height: auto !important;
+}
+
+.login-valuename {
+    width: 100% !important;
+    padding: 0 0 4px 0 !important;
+}
+
+.login-value {
+    float: none !important;
+    padding-left: 0 !important;
+}
+
+/* Fields fill the dialog instead of sitting at a fixed 230px */
+.login-cell input,
+.login-cell select,
+.login-container input:not([type=checkbox]),
+.login-container select,
+.tfa-login-code-input,
+.tfa-setup-code-label {
+    width: 100% !important;
+    max-width: none !important;
+    box-sizing: border-box !important;
+}
+
+.login-page-button,
+.login-container input[type=submit] {
+    width: 100% !important;
+    margin-top: var(--glove-gap) !important;
+}
+
+/* The checkbox row ("Stay logged in") keeps its label beside the box */
+.persistent-login-span {
+    font-size: var(--glove-font-base) !important;
+    margin-left: var(--glove-gap) !important;
+    vertical-align: middle !important;
+}
+
+.login-back-btn {
+    min-height: var(--glove-target) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    opacity: 1 !important;
+}
+
+/* ------------------------------------------------------------------ *
+ * Configuration UI: navigation, tables and icons
+ * ------------------------------------------------------------------ */
+
+.treeText,
+.configLink,
+.subnavDiv a,
+.content a {
+    display: inline-flex !important;
+    align-items: center !important;
+    min-height: var(--glove-target) !important;
+    padding: 4px 8px !important;
+}
+
+.properties-table td,
+.default-content-page table td,
+td {
+    padding: var(--glove-gap) 8px !important;
+    vertical-align: middle !important;
+}
+
+/* The icon set is sized in em, so it follows the font size, but the icons
+   that act as buttons need a target of their own. */
+.feather,
+.tree-icon,
+.data-icon,
+.button-icon {
+    width: 1.5em !important;
+    height: 1.5em !important;
+}
+
+.array-filter-submit,
+.obj-control-col-remove-btn,
+.obj-control-add-group-btn,
+.overlayform-close-button,
+.filter-clear-icon,
+.filter-icon {
+    min-width: var(--glove-target) !important;
+    min-height: var(--glove-target) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* ------------------------------------------------------------------ *
+ * Scrollbars
+ *
+ * .main-container scrolls, and a 15px scrollbar cannot be dragged with a
+ * glove.
+ * ------------------------------------------------------------------ */
+
+.main-container::-webkit-scrollbar,
+.content::-webkit-scrollbar,
+textarea::-webkit-scrollbar,
+.default-content-page::-webkit-scrollbar {
+    width: var(--glove-scrollbar) !important;
+    height: var(--glove-scrollbar) !important;
+}
+
+.main-container::-webkit-scrollbar-thumb,
+.content::-webkit-scrollbar-thumb,
+textarea::-webkit-scrollbar-thumb,
+.default-content-page::-webkit-scrollbar-thumb {
+    background: #7a8894 !important;
+    border-radius: 13px !important;
+    border: 5px solid transparent !important;
+    background-clip: content-box !important;
+}
+
+/* ------------------------------------------------------------------ *
+ * On-screen keyboard
+ *
+ * This is the control that matters most with gloves, because it is how the
+ * operator types at all.
+ *
+ * The keyboard control sizes its key grid with an inline style,
+ * "width: 770px; height: 230px", and positions every key as a percentage of
+ * that box - so the keys look untouchable from CSS. They are not: an
+ * !important rule outranks an inline declaration. Overriding the grid scales
+ * every key with it, from 50x50 to about 65x65 on a 1024px wide panel.
+ *
+ * The catch is the closed state. The HMI measures the keyboard at load time
+ * and injects
+ *
+ *     .keyboardcontainer.hidden { margin-bottom: -251px }
+ *
+ * to slide it out of view. A taller keyboard would hang into the page when
+ * closed. Because the height is pinned below, the correct offset is known
+ * exactly - grid height + 20px padding + 1px top border - and is restated
+ * here. The padding and border are pinned too, so the arithmetic cannot
+ * drift. Verified: with a 300px grid the panel is 321px and sits exactly on
+ * the bottom edge when closed, with 0px showing.
+ * ------------------------------------------------------------------ */
+
+.keyboardcontainer {
+    max-width: 100% !important;
+}
+
+.tchmi-keyboard {
+    padding: 10px !important;
+    border-width: 1px !important;
+    border-bottom-width: 0 !important;
+}
+
+.tchmi-keyboard-template-padding-container {
+    /* Follows the panel width, so keys are as wide as the screen allows */
+    width: calc(100vw - 24px) !important;
+    min-width: 0 !important;
+    height: var(--glove-key-grid-height) !important;
+    min-height: var(--glove-key-grid-height) !important;
+}
+
+/* Keep the closed position in step with the height set above */
+.keyboardcontainer.hidden {
+    margin-bottom: calc(-1 * (var(--glove-key-grid-height) + 21px)) !important;
+}
+
+/* The tab that opens the keyboard - 50x49 by default, sitting above the
+   panel. Its 'top' has to follow its height, since it is anchored upwards. */
+.keyboard-toggle {
+    width: 76px !important;
+    height: 72px !important;
+    top: -71px !important;
+    padding: 16px !important;
+}
+
+/* Key captions are drawn at 12px regardless of key size */
+.tchmi-keyboard-template-label {
+    font-size: 20px !important;
+    font-weight: 600 !important;
+}
+
+/* Confirm the key press: the keyboard gives no tactile feedback either */
+.tchmi-keyboard-template-key:active .tchmi-keyboard-template-backdrop {
+    filter: brightness(1.5) !important;
+}
